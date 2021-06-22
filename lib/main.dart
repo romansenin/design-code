@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'components/sidebar_row.dart';
-import 'model/sidebar.dart';
-
 void main() {
   runApp(MyApp());
 }
@@ -13,9 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: SidebarRow(
-          item: sidebarItem[1],
-        ),
+        body: Container(),
       ),
     );
   }
