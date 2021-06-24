@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:new_app/constants.dart';
 
+import 'components/cards/recent_course_card.dart';
 import 'model/course.dart';
 
 void main() {
@@ -13,10 +14,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: SafeArea(
-          child: Container(
-            child: RecentCourseCard(
-              course: recentCourses[2],
+        body: Container(
+          color: kBackgroundColor,
+          child: SafeArea(
+            child: Column(
+              children: [
+                HomeScreenNavBar(),
+                RecentCourseCard(
+                  course: recentCourses[2],
+                ),
+              ],
             ),
           ),
         ),
@@ -25,99 +32,117 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class RecentCourseCard extends StatelessWidget {
-  RecentCourseCard({this.course});
+class HomeScreenNavBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SidebarButton(),
+          SearchFieldWidget(),
+          Icon(
+            Icons.notifications,
+            color: kPrimaryLabelColor,
+          ),
+          SizedBox(width: 16),
+          CircleAvatar(
+            radius: 18,
+            backgroundImage: AssetImage('asset/images/profile.jpg'),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-  Course course;
+class SearchFieldWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: 12,
+          right: 25,
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(
+              14,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: kShadowColor,
+                offset: Offset(0, 12),
+                blurRadius: 16,
+              )
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 16,
+            ),
+            child: TextField(
+                cursorColor: kPrimaryLabelColor,
+                decoration: InputDecoration(
+                  icon: Icon(
+                    Icons.search,
+                    color: kPrimaryLabelColor,
+                    size: 20,
+                  ),
+                  border: InputBorder.none,
+                  hintText: "Search for courses",
+                  hintStyle: kSearchPlaceholderStyle,
+                ),
+                style: kSearchTextStyle,
+                onChanged: (newText) {
+                  print(newText);
+                }),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SidebarButton extends StatelessWidget {
+  const SidebarButton({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.topRight,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: 20.0),
-          child: Container(
-            width: 240,
-            height: 240,
-            decoration: BoxDecoration(
-              gradient: course.background,
-              borderRadius: BorderRadius.circular(41.0),
-              boxShadow: [
-                BoxShadow(
-                  color: course.background.colors[0].withOpacity(
-                    0.3,
-                  ),
-                  offset: Offset(0, 20),
-                  blurRadius: 30,
-                ),
-                BoxShadow(
-                  color: course.background.colors[1].withOpacity(
-                    0.3,
-                  ),
-                  offset: Offset(0, 20),
-                  blurRadius: 30,
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 32.0,
-                    left: 32.0,
-                    right: 32.0,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        course.courseSubtitle,
-                        style: kCardSubtitleStyle,
-                      ),
-                      SizedBox(
-                        height: 6.0,
-                      ),
-                      Text(
-                        course.courseTitle,
-                        style: kCardTitleStyle,
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Image.asset(
-                    'asset/illustrations/${course.illustration}',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ],
-            ),
-          ),
+    return RawMaterialButton(
+      onPressed: () {
+        print("Sidebar button pressed");
+      },
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      constraints: BoxConstraints(
+        maxWidth: 40,
+        maxHeight: 40,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: kShadowColor,
+              offset: Offset(0, 12),
+              blurRadius: 16,
+            )
+          ],
         ),
-        Padding(
-          padding: EdgeInsets.only(
-            right: 42,
-          ),
-          child: Container(
-            child: Image.asset('asset/logos/${course.logo}'),
-            width: 60.0,
-            height: 60.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(18.0),
-              boxShadow: [
-                BoxShadow(
-                  color: kShadowColor,
-                  offset: Offset(0, 4),
-                  blurRadius: 16.0,
-                )
-              ],
-            ),
-            padding: EdgeInsets.all(12.0),
-          ),
+        child: Image.asset(
+          'asset/icons/icon-sidebar.png',
+          color: kPrimaryLabelColor,
         ),
-      ],
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      ),
     );
   }
 }
