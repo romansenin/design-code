@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:new_app/constants.dart';
-import 'package:new_app/model/course.dart';
+import 'package:new_app/screens/sidebar_screen.dart';
 
 import 'components/home_screen_navbar.dart';
+import 'components/lists/explore_course_list.dart';
 import 'components/lists/recent_course_list.dart';
 
 void main() {
@@ -14,140 +15,107 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Container(
-          color: kBackgroundColor,
-          child: SafeArea(
-            child: Column(
-              children: [
-                HomeScreenNavBar(),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 20,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        "Recents",
-                        style: kLargeTitleStyle,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        "23 courses, more coming",
-                        style: kSubtitleStyle,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                RecentCourseList(),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 20.0,
-                    right: 20.0,
-                    top: 25.0,
-                    bottom: 16.0,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        "Explore",
-                        style: kTitle1Style,
-                      ),
-                    ],
-                  ),
-                ),
-                ExploreCourseList(),
-              ],
-            ),
-          ),
-        ),
-      ),
+      home: HomeScreen(),
     );
   }
 }
 
-class ExploreCourseList extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 120,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        itemCount: exploreCourses.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(
-              left: index == 0 ? 20.0 : 0.0,
-            ),
-            child: ExploreCourseCard(course: exploreCourses[index]),
-          );
-        },
-      ),
-    );
-  }
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class ExploreCourseCard extends StatelessWidget {
-  ExploreCourseCard({@required this.course});
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  Animation<Offset> sidebarAnimation;
+  AnimationController sidebarAnimationController;
 
-  final Course course;
+  @override
+  void initState() {
+    super.initState();
+    sidebarAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: 250,
+      ),
+    );
+    sidebarAnimation = Tween<Offset>(
+      begin: Offset(-1, 0),
+      end: Offset(0, 0),
+    ).animate(CurvedAnimation(
+      parent: sidebarAnimationController,
+      curve: Curves.easeInOut,
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        right: 20.0,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(41),
-        child: Container(
-          height: 120,
-          width: 280,
-          decoration: BoxDecoration(gradient: course.background),
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: 32.0,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        course.courseSubtitle,
-                        style: kCardSubtitleStyle,
-                      ),
-                      SizedBox(height: 6),
-                      Text(
-                        course.courseTitle,
-                        style: kCardTitleStyle,
-                      ),
-                    ],
+    return Scaffold(
+      body: Container(
+        color: kBackgroundColor,
+        child: Stack(
+          children: [
+            SafeArea(
+              child: Column(
+                children: [
+                  HomeScreenNavBar(
+                    triggerAnimation: () {
+                      sidebarAnimationController.forward();
+                    },
                   ),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Image.asset(
-                      'asset/illustrations/${course.illustration}',
-                      fit: BoxFit.cover,
-                      height: 100,
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20,
                     ),
-                  ],
-                )
-              ],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "Recents",
+                          style: kLargeTitleStyle,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "23 courses, more coming",
+                          style: kSubtitleStyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  RecentCourseList(),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 20.0,
+                      right: 20.0,
+                      top: 25.0,
+                      bottom: 16.0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "Explore",
+                          style: kTitle1Style,
+                        ),
+                      ],
+                    ),
+                  ),
+                  ExploreCourseList(),
+                ],
+              ),
             ),
-          ),
+            SlideTransition(
+              position: sidebarAnimation,
+              child: SafeArea(
+                child: SidebarScreen(),
+                bottom: false,
+              ),
+            ),
+          ],
         ),
       ),
     );
