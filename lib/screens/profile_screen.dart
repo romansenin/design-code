@@ -5,6 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:new_app/constants.dart';
 
 class ProfileScreen extends StatelessWidget {
+  final List<String> badges = [
+    'badge-01.png',
+    'badge-02.png',
+    'badge-03.png',
+    'badge-04.png',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,6 +98,113 @@ class ProfileScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            child: Padding(
+                              padding: EdgeInsets.all(6.0),
+                              child: Container(
+                                padding: EdgeInsets.all(6),
+                                child: CircleAvatar(
+                                  backgroundImage:
+                                      AssetImage('asset/images/profile.jpg'),
+                                  radius: 30.0,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: kBackgroundColor,
+                                  borderRadius: BorderRadius.circular(42.0),
+                                ),
+                              ),
+                            ),
+                            height: 84,
+                            width: 84,
+                            decoration: BoxDecoration(
+                              gradient: RadialGradient(
+                                colors: [
+                                  Color(0xFF00AEFF),
+                                  Color(0xFF0076FF),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(42.0),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Sai Kambampati", style: kTitle2Style),
+                              SizedBox(height: 8.0),
+                              Text(
+                                "Flutter Developer",
+                                style: kSecondaryCalloutLabelStyle,
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 28, bottom: 16),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Badges",
+                                  style: kHeadlineLabelStyle,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "See all",
+                                      style: kSearchPlaceholderStyle,
+                                    ),
+                                    Icon(
+                                      Icons.chevron_right,
+                                      color: kSecondaryLabelColor,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Container(
+                      height: 112,
+                      child: ListView.builder(
+                        padding: EdgeInsets.only(
+                          bottom: 28,
+                        ),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: badges.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            padding: EdgeInsets.only(
+                                left: 20,
+                                right: index == badges.length - 1 ? 20 : 0),
+                            decoration: BoxDecoration(boxShadow: [
+                              BoxShadow(
+                                  color: kShadowColor.withOpacity(0.1),
+                                  offset: Offset(0, 12),
+                                  blurRadius: 18)
+                            ]),
+                            child: Image.asset('asset/badges/${badges[index]}'),
+                          );
+                        },
+                      ),
+                    )
                   ],
                 ),
               ),
